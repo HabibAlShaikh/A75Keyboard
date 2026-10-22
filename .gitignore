@@ -8,8 +8,9 @@ __pycache__/
 .pytest_cache/
 
 # Large vendor/reference binaries (not redistributed)
-VGN_VHUB_*.zip
-Wootility-*.AppImage
+VGN_VHUB*
+Wootility*
+*.AppImage
 
 # Local runtime files and backups
 *.log
