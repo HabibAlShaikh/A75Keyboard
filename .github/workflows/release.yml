@@ -107,6 +107,7 @@ jobs:
           exit 0
           EOF
           chmod 755 "${root}/DEBIAN/postinst"
+          echo "/etc/udev/rules.d/70-vgn-a75.rules" > "${root}/DEBIAN/conffiles"
 
           dpkg-deb --build --root-owner-group "${root}" "dist/a75ctl_${version}_amd64.deb"
           (cd dist && sha256sum "a75ctl_${version}_amd64.deb" > "a75ctl_${version}_amd64.deb.sha256")
