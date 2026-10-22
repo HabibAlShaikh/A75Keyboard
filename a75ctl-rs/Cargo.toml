@@ -1,6 +1,6 @@
 [package]
 name = "a75ctl"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Fast Linux controller for the VGN A75 Hall-effect keyboard"
 license = "MIT"
