@@ -70,7 +70,13 @@ Probes:
 
 Tagged builds (`v*`) are built by GitHub Actions and published on the
 [Releases page](https://github.com/HabibAlShaikh/A75Keyboard/releases). The
-release tarball contains the Linux binary, the udev rule and an installer:
+release assets include:
+
+- `a75ctl-v*-x86_64-linux.tar.gz` — portable tarball with binary, udev rule
+  and `install.sh`
+- `a75ctl_*_amd64.deb` — Debian/Ubuntu package
+
+Install from the tarball:
 
 ```bash
 tar -xzf a75ctl-v*-x86_64-linux.tar.gz
@@ -80,11 +86,23 @@ sudo ./install.sh
 a75ctl
 ```
 
-Use a different destination prefix with `PREFIX`:
+Install the Debian package:
+
+```bash
+sudo apt install ./a75ctl_*_amd64.deb
+# replug the keyboard
+a75ctl
+```
+
+Use a different destination prefix with `PREFIX` for the tarball installer:
 
 ```bash
 sudo PREFIX="$HOME/.local" ./install.sh
 ```
+
+Windows `.exe` builds are not available yet. The current controller talks to
+`/dev/hidraw*` and uses Linux `evdev`/`uinput` for SOCD, so a Windows binary
+needs a separate HID backend and key-suppression layer.
 
 ## What the app can do
 

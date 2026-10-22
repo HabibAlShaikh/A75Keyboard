@@ -47,7 +47,7 @@ jobs:
         working-directory: a75ctl-rs
         run: cargo build --release --locked
 
-      - name: Package release
+      - name: Package tarball
         shell: bash
         run: |
           set -euo pipefail
@@ -64,11 +64,60 @@ jobs:
           tar -C dist -czf "${PWD}/dist/${package}.tar.gz" "${package}"
           (cd dist && sha256sum "${package}.tar.gz" > "${package}.tar.gz.sha256")
 
+      - name: Package Debian package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          package="a75ctl_${version}_amd64"
+          root="dist/${package}"
+
+          mkdir -p \
+            "${root}/DEBIAN" \
+            "${root}/usr/bin" \
+            "${root}/etc/udev/rules.d" \
+            "${root}/usr/share/doc/a75ctl"
+
+          install -m 755 a75ctl-rs/target/release/a75ctl "${root}/usr/bin/a75ctl"
+          install -m 644 packaging/70-vgn-a75.rules "${root}/etc/udev/rules.d/70-vgn-a75.rules"
+          install -m 644 README.md "${root}/usr/share/doc/a75ctl/README.md"
+          install -m 644 LICENSE "${root}/usr/share/doc/a75ctl/copyright"
+
+          cat > "${root}/DEBIAN/control" <<EOF
+          Package: a75ctl
+          Version: ${version}
+          Architecture: amd64
+          Maintainer: A75Keyboard contributors <a75keyboard@users.noreply.github.com>
+          Section: utils
+          Priority: optional
+          Homepage: https://github.com/HabibAlShaikh/A75Keyboard
+          Depends: libc6, libgcc-s1, libx11-6, libxcursor1, libxi6, libxinerama1, libxrandr2, libxkbcommon0, libxkbcommon-x11-0, libwayland-client0, libgl1, libegl1
+          Description: Native Linux controller for the VGN A75 Hall-effect keyboard
+           Configures actuation, rapid trigger, key remapping, RGB lighting,
+           profiles, live key testing and optional OS-level SOCD.
+          EOF
+
+          cat > "${root}/DEBIAN/postinst" <<'EOF'
+          #!/bin/sh
+          set -e
+          if command -v udevadm >/dev/null 2>&1; then
+            udevadm control --reload-rules || true
+            udevadm trigger || true
+          fi
+          exit 0
+          EOF
+          chmod 755 "${root}/DEBIAN/postinst"
+
+          dpkg-deb --build --root-owner-group "${root}" "dist/a75ctl_${version}_amd64.deb"
+          (cd dist && sha256sum "a75ctl_${version}_amd64.deb" > "a75ctl_${version}_amd64.deb.sha256")
+
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/*.tar.gz
             dist/*.tar.gz.sha256
+            dist/*.deb
+            dist/*.deb.sha256
           generate_release_notes: true
           fail_on_unmatched_files: true
