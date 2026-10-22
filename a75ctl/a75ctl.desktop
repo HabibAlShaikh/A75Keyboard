@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=A75 Control (Python)
-Comment=Configure the VGN A75 Hall-effect keyboard
-Exec=sh -c 'cd "$(dirname "$1")" && exec ./a75ctl' _ %k
-Icon=input-keyboard
-Terminal=false
-Categories=Settings;HardwareSettings;
-Keywords=keyboard;VGN;A75;rapid trigger;hall effect;

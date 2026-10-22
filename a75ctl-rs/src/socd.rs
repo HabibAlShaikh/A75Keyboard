@@ -211,7 +211,7 @@ fn create_uinput() -> io::Result<RawFd> {
     if fd < 0 {
         let e = io::Error::last_os_error();
         let msg = if matches!(e.raw_os_error(), Some(libc::EACCES) | Some(libc::EPERM)) {
-            "permission denied opening /dev/uinput. Install a75ctl/70-vgn-a75.rules              and run: sudo udevadm control --reload-rules && sudo udevadm trigger"
+            "permission denied opening /dev/uinput. Install packaging/70-vgn-a75.rules              and run: sudo udevadm control --reload-rules && sudo udevadm trigger"
                 .to_string()
         } else {
             format!("cannot open /dev/uinput: {e}")
@@ -539,7 +539,7 @@ impl SocdInterceptor {
             let e = io::Error::last_os_error();
             let msg = if matches!(e.raw_os_error(), Some(libc::EACCES) | Some(libc::EPERM)) {
                 format!(
-                    "permission denied opening {}. Install a75ctl/70-vgn-a75.rules                      (it must sort before 71-seat.rules), then run:                      sudo udevadm control --reload-rules && sudo udevadm trigger                      and replug the keyboard. For a quick temporary test:                      sudo setfacl -m u:$USER:rw {}",
+                    "permission denied opening {}. Install packaging/70-vgn-a75.rules                      (it must sort before 71-seat.rules), then run:                      sudo udevadm control --reload-rules && sudo udevadm trigger                      and replug the keyboard. For a quick temporary test:                      sudo setfacl -m u:$USER:rw {}",
                     path.display(),
                     path.display()
                 )

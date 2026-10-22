@@ -8,14 +8,16 @@ Linux controller in the spirit of Wootility.
 
 ```
 A75Keyboard/
-├── a75ctl-rs/                      Rust app (recommended)
+├── a75ctl-rs/                      Rust app
 │   ├── src/protocol.rs             HID protocol, discovery, RGB, matrix
 │   ├── src/input.rs                live key + analog readers, 75% layout
 │   ├── src/socd.rs                 evdev/uinput SOCD interceptor
 │   ├── src/app.rs                  egui UI
 │   └── README.md
-├── a75ctl/                         legacy Python prototype + analysis
-│   └── docs/FIRMWARE.md            full firmware + protocol write-up
+├── docs/
+│   ├── FIRMWARE.md                 full firmware + protocol write-up
+│   └── WINDOWS_VHUB_PROTOCOL.md    official Windows VHUB analysis
+├── packaging/70-vgn-a75.rules      udev permissions (hidraw + evdev + uinput)
 ├── firmware/                       main + MLED firmware, update ZIP, ELF views
 ├── tools/make_elf.py               reproduce the REA ELF wrapper
 └── README.md
@@ -28,7 +30,7 @@ The large vendor/reference binaries are **not committed**:
 - `Wootility-5.4.2.AppImage` — UX reference only
 
 Place them in this directory if you want to reproduce the extraction steps;
-their hashes are recorded in [`a75ctl/docs/FIRMWARE.md`](a75ctl/docs/FIRMWARE.md).
+their hashes are recorded in [`docs/FIRMWARE.md`](docs/FIRMWARE.md).
 
 ## Quick start (Rust)
 
@@ -42,7 +44,7 @@ One-time permissions:
 
 ```bash
 sudo rm -f /etc/udev/rules.d/99-vgn-a75.rules   # old late rule, if present
-sudo cp ../a75ctl/70-vgn-a75.rules /etc/udev/rules.d/
+sudo cp ../packaging/70-vgn-a75.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 # unplug/re-plug the keyboard
 ```
@@ -115,7 +117,7 @@ responsive.
 - `0xA3` (`GET_KEYSTROKE`) is not implemented and stalls the control pipe;
   the app does not send it.
 
-Full details and REA evidence IDs: [`a75ctl/docs/FIRMWARE.md`](a75ctl/docs/FIRMWARE.md).
+Full details and REA evidence IDs: [`docs/FIRMWARE.md`](docs/FIRMWARE.md).
 
 ### Official Windows VHUB 4.0.9
 
@@ -128,14 +130,14 @@ keyboards, but those are **not A75 firmware features** and must not be sent to
 the A75.
 
 The packet tables, source offsets, safety notes and a Linux implementation
-module are in [`a75ctl/docs/WINDOWS_VHUB_PROTOCOL.md`](a75ctl/docs/WINDOWS_VHUB_PROTOCOL.md)
+module are in [`docs/WINDOWS_VHUB_PROTOCOL.md`](docs/WINDOWS_VHUB_PROTOCOL.md)
 and [`a75ctl-rs/src/vgn_hid.rs`](a75ctl-rs/src/vgn_hid.rs).
 
 ## Notes
 
 Only one process should own the vendor feature interface at a time. Close the GUI
-before running `--status`, `--selftest`, or the legacy Python tool; concurrent
-feature-report users can time out and stall the control pipe.
+before running `--status` or `--selftest`; concurrent feature-report users can
+time out and stall the control pipe.
 
 ## Wootility note
 

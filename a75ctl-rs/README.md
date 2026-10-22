@@ -3,9 +3,8 @@
 Fast, native Linux controller for the **VGN A75 Hall-effect** keyboard
 (ROYUAN `3151:4010 / 4011 / 4015`).
 
-This is the optimized replacement for the Python prototype in `../a75ctl`.
-It keeps all HID work on a background thread, so the UI stays at 60 fps while
-the keyboard is being configured.
+All HID work runs on a background thread, so the UI stays at 60 fps while the
+keyboard is being configured.
 
 ## Features
 
@@ -78,11 +77,11 @@ Dependencies are only `eframe`/`egui` and `libc`; HID is done directly with
 
 ## Permissions
 
-Install the udev rule from the Python folder (or copy it here):
+Install the udev rule from the repository:
 
 ```bash
 sudo rm -f /etc/udev/rules.d/99-vgn-a75.rules   # remove the old late rule if present
-sudo cp ../a75ctl/70-vgn-a75.rules /etc/udev/rules.d/
+sudo cp ../packaging/70-vgn-a75.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 # unplug/re-plug the keyboard
@@ -130,7 +129,7 @@ egui code; no Wootility assets or code are copied.
 
 The official `VGN_VHUB_4.0.9.zip` Windows build was unpacked and analysed with
 REA. The detailed packet tables are in
-[`../a75ctl/docs/WINDOWS_VHUB_PROTOCOL.md`](../a75ctl/docs/WINDOWS_VHUB_PROTOCOL.md).
+[`../docs/WINDOWS_VHUB_PROTOCOL.md`](../docs/WINDOWS_VHUB_PROTOCOL.md).
 
 Key findings:
 
@@ -209,7 +208,7 @@ Live keyboard input is read from `/dev/hidraw0` (8-byte boot keyboard
 reports). Analog telemetry is read from the vendor input node as
 `05 1B <hi> <lo>` (16-bit value).
 
-Full firmware analysis: [`../a75ctl/docs/FIRMWARE.md`](../a75ctl/docs/FIRMWARE.md).
+Full firmware analysis: [`../docs/FIRMWARE.md`](../docs/FIRMWARE.md).
 
 ## Feature coverage vs. Wootility
 
@@ -248,8 +247,8 @@ from fighting over the feature interface.
 ## Notes
 
 Only one process should own the vendor feature interface at a time.
-Close the GUI before running `--status`, `--selftest`, or the legacy Python
-tool; concurrent feature-report users can time out and stall the control pipe.
+Close the GUI before running `--status` or `--selftest`; concurrent
+feature-report users can time out and stall the control pipe.
 
 ## Safety
 

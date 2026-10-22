@@ -88,7 +88,7 @@ The app then has two different `rongyuan` paths:
 
 The A75 exposes page `0xFFFF`, **usage 2**, and a **64-byte** feature report.
 It matches neither path. Consequently the A75 protocol is the older VGN web
-VHUB protocol documented in `a75ctl/docs/FIRMWARE.md`, not the newer RyServe
+VHUB protocol documented in `docs/FIRMWARE.md`, not the newer RyServe
 or SDK-v2 packet format.
 
 Source locations:
@@ -431,7 +431,7 @@ analog-depth tests.
 * `GFSRateOfReturn`: SDK byte offset `0xe6b8`.
 * `GFSHighPollingRateReset`: SDK byte offset `0xf6bb`.
 * Higher-key read-back layouts: SDK byte offset `0xf760`.
-* A75 packet tables: `a75ctl/docs/FIRMWARE.md` §§5–6.
+* A75 packet tables: `docs/FIRMWARE.md` §§5–6.
 * A75 implementation: `a75ctl-rs/src/protocol.rs` (`set_actuation_key`,
   `set_report_rate`, `set_key_matrix`).
 
