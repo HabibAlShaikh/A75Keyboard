@@ -12,6 +12,9 @@ VGN_VHUB*
 Wootility*
 *.AppImage
 
+# Release packaging output
+dist/
+
 # Local runtime files and backups
 *.log
 *.tmp

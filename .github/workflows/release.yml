@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build Linux release
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: a75ctl-rs
+
+      - name: Install Linux GUI dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxkbcommon-dev \
+            libwayland-dev \
+            libx11-dev \
+            libxi-dev \
+            libxcursor-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libgl1-mesa-dev \
+            libegl1-mesa-dev
+
+      - name: Test
+        working-directory: a75ctl-rs
+        run: cargo test --release --locked
+
+      - name: Build
+        working-directory: a75ctl-rs
+        run: cargo build --release --locked
+
+      - name: Package release
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          package="a75ctl-${tag}-x86_64-linux"
+          mkdir -p "dist/${package}"
+
+          install -m 755 a75ctl-rs/target/release/a75ctl "dist/${package}/a75ctl"
+          install -m 644 packaging/70-vgn-a75.rules "dist/${package}/70-vgn-a75.rules"
+          install -m 755 packaging/install.sh "dist/${package}/install.sh"
+          install -m 644 README.md "dist/${package}/README.md"
+          install -m 644 LICENSE "dist/${package}/LICENSE"
+
+          tar -C dist -czf "dist/${package}.tar.gz" "${package}"
+          (cd dist && sha256sum "${package}.tar.gz" > "${package}.tar.gz.sha256")
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256
+          generate_release_notes: true
+          fail_on_unmatched_files: true

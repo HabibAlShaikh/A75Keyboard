@@ -1,5 +1,7 @@
 # VGN A75 — firmware analysis + Linux control app
 
+[![Latest release](https://img.shields.io/github/v/release/HabibAlShaikh/A75Keyboard?display_name=tag)](https://github.com/HabibAlShaikh/A75Keyboard/releases/latest)
+
 This workspace analyses the **VGN A75 eSports Hall-effect gasket-mount
 keyboard** (ROYUAN `3151:4010 / 4011 / 4015`) and provides a fast native
 Linux controller in the spirit of Wootility.
@@ -17,9 +19,12 @@ A75Keyboard/
 ├── docs/
 │   ├── FIRMWARE.md                 full firmware + protocol write-up
 │   └── WINDOWS_VHUB_PROTOCOL.md    official Windows VHUB analysis
-├── packaging/70-vgn-a75.rules      udev permissions (hidraw + evdev + uinput)
+├── packaging/
+│   ├── 70-vgn-a75.rules            udev permissions (hidraw + evdev + uinput)
+│   └── install.sh                  release tarball installer
 ├── firmware/                       main + MLED firmware, update ZIP, ELF views
 ├── tools/make_elf.py               reproduce the REA ELF wrapper
+├── .github/workflows/release.yml   tag-driven release build
 └── README.md
 ```
 
@@ -59,6 +64,26 @@ Probes:
 ```bash
 ./target/release/a75ctl --status
 ./target/release/a75ctl --selftest
+```
+
+## Releases
+
+Tagged builds (`v*`) are built by GitHub Actions and published on the
+[Releases page](https://github.com/HabibAlShaikh/A75Keyboard/releases). The
+release tarball contains the Linux binary, the udev rule and an installer:
+
+```bash
+tar -xzf a75ctl-v*-x86_64-linux.tar.gz
+cd a75ctl-v*-x86_64-linux
+sudo ./install.sh
+# replug the keyboard
+a75ctl
+```
+
+Use a different destination prefix with `PREFIX`:
+
+```bash
+sudo PREFIX="$HOME/.local" ./install.sh
 ```
 
 ## What the app can do
