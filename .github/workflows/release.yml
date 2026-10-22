@@ -61,7 +61,7 @@ jobs:
           install -m 644 README.md "dist/${package}/README.md"
           install -m 644 LICENSE "dist/${package}/LICENSE"
 
-          tar -C dist -czf "dist/${package}.tar.gz" "${package}"
+          tar -C dist -czf "${PWD}/dist/${package}.tar.gz" "${package}"
           (cd dist && sha256sum "${package}.tar.gz" > "${package}.tar.gz.sha256")
 
       - name: Upload release assets
