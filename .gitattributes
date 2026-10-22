@@ -1,0 +1,4 @@
+*.bin binary
+*.elf binary
+*.zip binary
+*.AppImage binary

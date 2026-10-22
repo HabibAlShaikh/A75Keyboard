@@ -1,0 +1,23 @@
+# Rust build artifacts
+target/
+a75ctl-rs/target/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Large vendor/reference binaries (not redistributed)
+VGN_VHUB_*.zip
+Wootility-*.AppImage
+
+# Local runtime files and backups
+*.log
+*.tmp
+*.bak
+*~
+
+# Editor / OS metadata
+.DS_Store
+.idea/
+.vscode/

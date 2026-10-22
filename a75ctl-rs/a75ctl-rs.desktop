@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=A75 Control
+Comment=Fast RGB + rapid-trigger controller for the VGN A75
+Exec=sh -c 'cd "$(dirname "$1")" && exec ./target/release/a75ctl' _ %k
+Icon=input-keyboard
+Terminal=false
+Categories=Settings;HardwareSettings;
+Keywords=keyboard;VGN;A75;rapid trigger;hall effect;RGB;

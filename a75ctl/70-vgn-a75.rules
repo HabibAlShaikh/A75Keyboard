@@ -1,0 +1,9 @@
+# VGN A75 (ROYUAN 3151:4010/4011/4015) - vendor HID interface
+# Install as /etc/udev/rules.d/70-vgn-a75.rules (must sort before 71-seat.rules).
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3151", ATTRS{idProduct}=="401[015]", MODE="0660", TAG+="uaccess"
+
+# A75 evdev keyboard node, used by the optional OS-level SOCD interceptor.
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{idVendor}=="3151", ATTRS{idProduct}=="401[015]", TAG+="uaccess"
+
+# /dev/uinput for the virtual keyboard created by the SOCD interceptor.
+KERNEL=="uinput", TAG+="uaccess", OPTIONS+="static_node=uinput"
